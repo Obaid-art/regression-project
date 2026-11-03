@@ -9,8 +9,9 @@ const NEUR = [1, 2, 4, 8, 16, 32, 64], EPO = [50, 100, 300, 1000, 3000, 10000], 
 const FONT = { family: '"Segoe UI", system-ui, Arial, sans-serif', size: 16, color: COL.ink };
 function layout(title, xt, yt, extra) {
   return Object.assign({ title: { text: title, font: { size: 19, color: COL.blue, family: FONT.family }, x: 0.02, xanchor: 'left' }, font: FONT, margin: { l: 70, r: 20, t: 52, b: 118 }, paper_bgcolor: '#fff', plot_bgcolor: '#fff',
-    xaxis: { title: { text: xt, font: { size: 16 } }, gridcolor: COL.rule, zeroline: false, linecolor: '#9FB3CC' }, yaxis: { title: { text: yt, font: { size: 16 } }, gridcolor: COL.rule, zeroline: false, linecolor: '#9FB3CC' },
-    legend: { orientation: 'h', x: 0.5, xanchor: 'center', y: -0.3, yanchor: 'top', font: { size: 14 } }, hovermode: 'closest', showlegend: true }, extra || {});
+    xaxis: { title: { text: xt, font: { size: 16, color: COL.ink } }, tickfont: { color: COL.ink }, gridcolor: '#DCE6F3', zeroline: true, zerolinecolor: COL.ink, zerolinewidth: 2.5, linecolor: COL.ink, linewidth: 1.5 },
+    yaxis: { title: { text: yt, font: { size: 16, color: COL.ink } }, tickfont: { color: COL.ink }, gridcolor: '#DCE6F3', zeroline: true, zerolinecolor: COL.ink, zerolinewidth: 2.5, linecolor: COL.ink, linewidth: 1.5 },
+    legend: { orientation: 'h', x: 0.5, xanchor: 'center', y: -0.3, yanchor: 'top', font: { size: 14, color: COL.ink } }, hovermode: 'closest', showlegend: true }, extra || {});
 }
 function dots(x, y, name, test, rows, size) { return { x, y, name, mode: 'markers', type: 'scatter', customdata: rows, hovertemplate: rows ? 'row %{customdata}<br>%{x}, %{y}<extra></extra>' : '%{x}, %{y}<extra></extra>', marker: { size: size || 12, color: test ? COL.added : COL.halo, line: { color: test ? COL.amber : COL.blue, width: 2 } } }; }
 function curve(x, y, name, color, dash) { return { x, y, name, mode: 'lines', type: 'scatter', hoverinfo: 'skip', line: { color, width: 4, dash: dash || 'solid' } }; }
@@ -24,7 +25,28 @@ async function figure(traces, lay, w, h) {   // a PNG of a picture, for the repo
 
 // ---------- stations
 const nav = [...document.querySelectorAll('nav button')];
-function show(k) { document.querySelectorAll('.station').forEach(s => s.classList.toggle('on', s.id === 'st' + k)); nav.forEach(b => b.classList.toggle('on', +b.dataset.st === k)); window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(() => window.dispatchEvent(new Event('resize')), 50); }
+function show(k) { document.querySelectorAll('.station').forEach(s => s.classList.toggle('on', s.id === 'st' + k)); nav.forEach(b => b.classList.toggle('on', +b.dataset.st === k)); coach(k); window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(() => window.dispatchEvent(new Event('resize')), 50); }
+function flash(el) { if (!el) return; el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
+const GUIDE = {
+  1: () => { const pl = C.planted(ST.meta); const imp = pl.filter(p => p.kind !== 'outlier'), out = pl.find(p => p.kind === 'outlier'); return {
+    title: 'The kettle: thirty-one readings, three of them wrong on purpose',
+    body: `<p>Water heating in a kettle, a reading every two seconds. Look at the picture before you touch anything: most points climb in a straight line, and three do not belong.</p>
+<ul><li><span class="do">Do</span> click a point that cannot be real and remove it with a reason. Row ${imp[0].row}: ${imp[0].note}. Row ${imp[1].row}: ${imp[1].note}.</li>
+<li><span class="do">Do</span> look at row ${out.row} before deciding: ${out.note}. It is possible, but it sits far from every neighbour. Remove it and say why, or keep it and watch what it does in step 1b. Both are fine when the reason is sound.</li>
+<li><span class="dont">Don't</span> remove a row just because it is a little high or a little low. Measurements have noise. Three in thirty-one is plenty.</li></ul>
+<div class="model"><b>A good answer to the intuition question:</b> "A straight line: the element gives the water the same energy every second, so the temperature should climb steadily." Other answers can be right too; what counts is the reason.</div>`,
+    act: ['Show me the first wrong row', () => { inspect(imp[0].row); flash($('inspect')); flash($('removeBtn')); }] }; },
+  2: () => ({ title: 'Seal first, then one currency', body: `<p>Press <b>Split and standardise</b>. Every fourth kept row turns orange: sealed. No model will see those rows until the end; they are the exam.</p><p>Then press <b>Train twice</b>. The same network on the raw numbers scores about zero; on the standardised numbers it scores near one. That picture is the reason standardising is a must.</p><div class="model"><b>What you will write later:</b> "We sealed the test rows before fitting so the test is honest, and we standardised with the training rows' mean and std so that every number speaks the same language."</div>`, act: ['Show me the split button', () => flash($('splitBtn'))] }),
+  3: () => ({ title: 'One knob, one bowl', body: `<p>Move the slider at least three times and watch the loss. Every attempt is a dot in the bowl. Then press <b>Let calculus find the bottom</b>: it lands on the slope with the smallest loss in one line.</p><ul><li><span class="do">Do</span> read the equation in plant units: for the kettle it should say roughly 22 + 1.2 · time.</li><li><span class="dont">Don't</span> stop at a good-looking attempt; the bottom of the bowl is a number, not a feeling.</li></ul>`, act: ['Show me the slider', () => flash($('m'))] }),
+  4: () => ({ title: 'Play, then pick by the test score', body: `<p>Train three times at least. Try 1 layer × 4 neurons × 300 epochs, then 2 × 8 × 1000, then 3 × 64 × 3000 with learning rate 0.03. Watch the two scores.</p><ul><li><span class="do">Do</span> pick by the <b>test</b> score. If two runs score the same, the one with fewer weights is the better pick.</li><li><span class="dont">Don't</span> pick the highest <b>training</b> score; a run that memorises can look perfect there and fail on the sealed rows.</li></ul><div class="model"><b>A good "why this run":</b> "Run 1: the highest test score, and with 13 weights it is the simplest run on the board." Other picks can be right with a reason of this kind.</div>`, act: ['Show me the train button', () => flash($('trainBtn'))] }),
+  5: () => ({ title: 'Guess first, then let the sealed rows decide', body: `<p>Write your guess before pressing. For the kettle the physics is a straight line, so the line should match the network on the sealed rows with only two numbers.</p><div class="model"><b>A good guess:</b> "The line, because heating at constant power is linear and the network has nothing extra to find." <b>A good answer to the last question:</b> "The line: same score, two numbers we can read and defend, and it still works a little outside the range." Other answers can be right too.</div>`, act: ['Show me the compare button', () => flash($('cmpBtn'))] }),
+  6: () => ({ title: 'Your report, then the writing', body: `<p>Type the names, press <b>Make my report</b>, download the three files. Open the Word file: every number and figure is there. Under every step, write the two boxes in your own words. That is what is marked.</p><ul><li><span class="do">Do</span> answer "what if we had skipped it" with what you saw on this page: the line with the wrong rows put back, the raw-numbers run, the memorising run.</li><li><span class="dont">Don't</span> paste the questions back as answers, and don't write what you did not see.</li></ul>`, act: ['Show me the report button', () => flash($('reportBtn'))] }),
+};
+function coach(k) {
+  const box = $('guide'); if (ST.g !== '0' || !GUIDE[k]) { box.hidden = true; return; }
+  const gd = GUIDE[k](); box.hidden = false; box.innerHTML = `<div class="who">The practice run · your coach</div><h3>${gd.title}</h3>${gd.body}<div class="actions"><button class="btn sm" id="guideAct">${gd.act[0]}</button></div>`;
+  $('guideAct').addEventListener('click', gd.act[1]);
+}
 function unlock(k) { nav[k].disabled = false; } function done(k) { nav[k].classList.add('done'); }
 nav.forEach(b => b.addEventListener('click', () => show(+b.dataset.st)));
 document.querySelectorAll('textarea[data-q]').forEach(t => t.addEventListener('input', () => { ST.intuition[t.dataset.q] = t.value; save(); }));
@@ -32,11 +54,11 @@ function save() { if (!ST.g) return; try { localStorage.setItem('project-g' + ST
 function load() { try { const d = JSON.parse(localStorage.getItem('project-g' + ST.g) || 'null'); if (!d) return; ST.removed = d.removed || {}; ST.intuition = d.intuition || {}; $('members').value = d.members || ''; document.querySelectorAll('textarea[data-q]').forEach(t => t.value = ST.intuition[t.dataset.q] || ''); } catch (e) { } }
 
 // ---------- 0 · the group
-for (const g of Object.keys(DATA)) { const m = DATA[g]; const b = document.createElement('button'); b.className = 'rig'; b.innerHTML = `<div class="g">group ${g}</div><b>${m.name}</b><span>${m.story}</span>`; b.addEventListener('click', () => choose(g)); $('rigs').appendChild(b); }
+for (const g of Object.keys(DATA).sort((a, b) => +a - +b)) { const m = DATA[g]; const b = document.createElement('button'); b.className = 'rig' + (g === '0' ? ' practice' : ''); b.innerHTML = `<div class="g">${g === '0' ? 'start here · practice run' : 'group ' + g}</div><b>${m.name}</b><span>${m.story}</span>`; b.addEventListener('click', () => choose(g)); $('rigs').appendChild(b); }
 function choose(g) {
   const m = DATA[g], { x, y } = C.parse(m.csv); Object.assign(ST, { g, meta: m, x, y, removed: {}, keep: [], S: null, attempts: [], line: null, board: [], nets: {}, pick: null, intuition: {}, effect: null, std: null, cmp: null, law: null, locked: false });
   load(); $('story').textContent = `Group ${g} · ${m.name}. ${m.story} ${x.length} rows of ${m.x} (${m.xu}) against ${m.y} (${m.yu}).`;
-  unlock(1); done(0); show(1); drawData(); listRemoved(); $('card1b').hidden = true; $('hint').hidden = true;
+  unlock(1); done(0); show(1); drawData(); listRemoved(); $('card1b').hidden = true; $('hint').hidden = true; coach(1);
 }
 
 // ---------- 1 · look and clean
@@ -44,7 +66,11 @@ let inspected = null;
 function keptRows() { return ST.x.map((_, i) => !ST.removed[i + 1]); }
 function drawData() {
   const keep = keptRows(), rows = [], xs = [], ys = []; for (let i = 0; i < ST.x.length; i++) if (keep[i]) { rows.push(i + 1); xs.push(ST.x[i]); ys.push(ST.y[i]); }
-  const [xt, yt] = ax(); draw('p1', [dots(xs, ys, 'a measurement', false, rows, 13)], layout(`group ${ST.g}: ${ST.meta.name}`, xt, yt, { showlegend: false }));
+  const [xt, yt] = ax(); const extra = { showlegend: false, shapes: [], annotations: [] };
+  const ymin = Math.min(...ys), xmin = Math.min(...xs);   // anything below zero gets a red tint and a word, so nobody can miss it
+  if (ymin < 0) { extra.shapes.push({ type: 'rect', xref: 'paper', x0: 0, x1: 1, yref: 'y', y0: ymin * 1.15, y1: 0, fillcolor: 'rgba(181,69,63,0.10)', line: { width: 0 }, layer: 'below' }); extra.annotations.push({ xref: 'paper', x: 0.01, y: ymin * 0.6, text: 'below zero', showarrow: false, font: { color: COL.red, size: 15, family: FONT.family }, xanchor: 'left' }); }
+  if (xmin < 0) { extra.shapes.push({ type: 'rect', yref: 'paper', y0: 0, y1: 1, xref: 'x', x0: xmin * 1.15, x1: 0, fillcolor: 'rgba(181,69,63,0.10)', line: { width: 0 }, layer: 'below' }); extra.annotations.push({ yref: 'paper', y: 0.97, x: xmin * 0.5, text: 'below zero', showarrow: false, font: { color: COL.red, size: 15, family: FONT.family }, textangle: -90 }); }
+  draw('p1', [dots(xs, ys, 'a measurement', false, rows, 13)], layout(`group ${ST.g}: ${ST.meta.name}`, xt, yt, extra));
   $('p1').on('plotly_click', ev => { const p = ev.points[0]; inspect(p.customdata); });
   $('count1') && 0;
 }
@@ -180,17 +206,19 @@ $('members').addEventListener('input', save);
 // ---------- 6 · the report (built in report.js, shared with the Node test)
 $('reportBtn').addEventListener('click', async () => {
   const S = ST.S, m = ST.meta, g = ST.g; if (!S || !ST.line || !ST.cmp) { $('n6').textContent = 'Finish steps 2 to 5 first.'; return; }
-  $('reportBtn').disabled = true; $('n6').textContent = 'drawing the figures…'; const [xt, yt] = ax(); const pick = chosen(), b = best(); const today = new Date().toISOString().slice(0, 10); const members = $('members').value.trim();
+  $('reportBtn').disabled = true; $('dl').innerHTML = ''; $('n6').textContent = 'drawing the figures…'; const g0 = ST.g, line0 = ST.line, cmp0 = ST.cmp;
+  if (!line0 || !cmp0) { $('reportBtn').disabled = false; return; } const [xt, yt] = ax(); const pick = chosen(), b = best(); const today = new Date().toISOString().slice(0, 10); const members = $('members').value.trim();
   const lo = Math.min(...S.ytr, ...S.yte), hi = Math.max(...S.ytr, ...S.yte), pad = 0.25 * (hi - lo); const clip = v => v.map(u => isFinite(u) ? Math.max(lo - pad, Math.min(hi + pad, u)) : null);
   const keptX = [], keptY = [], keptR = []; ST.keep.forEach((k, i) => { if (k) { keptX.push(ST.x[i]); keptY.push(ST.y[i]); keptR.push(i + 1); } });
   const F = {};
   F.data = await figure([dots(keptX, keptY, 'the rows you kept', false, keptR)], layout(`group ${g}: ${m.name}, after your cleaning`, xt, yt, { showlegend: false }), 1100, 600);
   F.split = await figure([dots(S.xtr, S.ytr, 'training rows', false), dots(S.xte, S.yte, 'sealed test rows', true)], layout('every fourth kept row is sealed', xt, yt), 1100, 600);
-  F.line = await figure([dots(S.xtr, S.ytr, 'training rows', false), dots(S.xte, S.yte, 'sealed test rows', true), curve(S.grid, ST.line.f(S.grid), 'the line', COL.ink)], layout(`the line:  training R² ${C.fmt(ST.line.train, 3)},  test R² ${C.fmt(ST.line.test, 3)}`, xt, yt), 1100, 600);
+  F.line = await figure([dots(S.xtr, S.ytr, 'training rows', false), dots(S.xte, S.yte, 'sealed test rows', true), curve(S.grid, line0.f(S.grid), 'the line', COL.ink)], layout(`the line:  training R² ${C.fmt(line0.train, 3)},  test R² ${C.fmt(line0.test, 3)}`, xt, yt), 1100, 600);
   F.net = await figure([dots(S.xtr, S.ytr, 'training rows', false), dots(S.xte, S.yte, 'sealed test rows', true), curve(S.grid, pick.yg, `run ${pick.run}: ${pick.layers} × ${pick.neurons}, ${pick.epochs} epochs`, COL.green)], layout(`your pick:  training R² ${C.fmt(pick.train, 3)},  test R² ${C.fmt(pick.test, 3)}`, xt, yt), 1100, 600);
-  F.compare = await figure([dots(S.xtr, S.ytr, 'training rows', false), dots(S.xte, S.yte, 'sealed test rows', true)].concat(ST.cmp.rows.map(r => curve(S.grid, clip(r.f(S.grid)), `${r.name.split(' (')[0]}: test R² ${C.fmt(r.test, 3)}`, r.color))), layout('three candidates, judged on the sealed rows', xt, yt), 1100, 640);
+  if (ST.g !== g0) return; F.compare = await figure([dots(S.xtr, S.ytr, 'training rows', false), dots(S.xte, S.yte, 'sealed test rows', true)].concat(cmp0.rows.map(r => curve(S.grid, clip(r.f(S.grid)), `${r.name.split(' (')[0]}: test R² ${C.fmt(r.test, 3)}`, r.color))), layout('three candidates, judged on the sealed rows', xt, yt), 1100, 640);
   if (ST.effect && ST.effect.removed.length) { const e = cleaningEffect(); F.effect = await figure([dots(e.xtrAll, e.ytrAll, 'training rows, removed rows put back', false), dots(S.xte, S.yte, 'sealed test rows', true), curve(S.grid, e.withR.f(S.grid), `with the removed rows put back: test R² ${C.fmt(e.res.with.test, 3)}`, COL.red, 'dash'), curve(S.grid, e.without.f(S.grid), `with our cleaning: test R² ${C.fmt(e.res.without.test, 3)}`, COL.ink)], layout('what our cleaning did to the line', xt, yt), 1100, 600); }
   if (ST.std) { const r = C.stdEffect(S); F.std = await figure([dots(S.xtr, S.ytr, 'training rows', false), dots(S.xte, S.yte, 'sealed test rows', true), curve(S.grid, clip(r.raw.f(S.grid)), `raw numbers: test R² ${C.fmt(Math.max(r.raw.test, -9), 2)}`, COL.red), curve(S.grid, clip(r.std.f(S.grid)), `standardised: test R² ${C.fmt(r.std.test, 2)}`, COL.green)], layout('the same network, plain gradient descent, 300 epochs', xt, yt), 1100, 600); }
+  if (ST.g !== g0) return;
   $('n6').textContent = 'writing the report and the slides…';
   const R = REPORT.build({ C, docx, PptxGenJS }, ST, F, pick, b, members, today);
   const blob = await docx.Packer.toBlob(R.doc); const pblob = await R.pptx.write({ outputType: 'blob' }); const jblob = new Blob([JSON.stringify(R.results, null, 1)], { type: 'application/json' });
