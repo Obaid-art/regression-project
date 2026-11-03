@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The project · Machine Learning: Regression</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="kicker">Khalifa University · Chemical Engineering · Prof. Ali Elkamel · Machine Learning: Regression</div>
+  <h1>The project</h1>
+  <p>One dataset per group, measured on real equipment. You clean it, split it, fit a line, train a network, and judge every model on rows it has never seen. Ninety minutes. Nothing to install.</p>
+</header>
+<div class="wrap">
+<nav>
+  <button data-st="0" class="on"><span class="n">0</span>Your group</button>
+  <button data-st="1" disabled><span class="n">1</span>Look and clean</button>
+  <button data-st="2" disabled><span class="n">2</span>Split and standardise</button>
+  <button data-st="3" disabled><span class="n">3</span>The line</button>
+  <button data-st="4" disabled><span class="n">4</span>The network board</button>
+  <button data-st="5" disabled><span class="n">5</span>Three candidates</button>
+  <button data-st="6" disabled><span class="n">6</span>Your report</button>
+  <div class="small" id="saved"></div>
+</nav>
+<main>
+
+<!-- ================================================================ 0 group -->
+<section class="station on" id="st0">
+  <div class="kicker">Step 0</div><h1 class="t">Which group are you?</h1>
+  <p class="lead">Every group has its own equipment and its own measurements. Pick yours. Some questions along the way have <b>no right or wrong answer</b>: answer from your own understanding.</p>
+  <div class="rigs" id="rigs"></div>
+</section>
+
+<!-- ================================================================ 1 look and clean -->
+<section class="station" id="st1">
+  <div class="kicker">Step 1</div><h1 class="t">Look at the data. Then clean it.</h1>
+  <p class="lead" id="story"></p>
+  <div class="grid">
+    <div class="card">
+      <h2>The measurements, exactly as logged</h2>
+      <div class="plot tall" id="p1"></div>
+      <p class="note">Click any point to inspect it. Rows that cannot be real must go. A row that is possible but far from the rest is an <b>outlier</b>: look at it, then decide.</p>
+    </div>
+    <div>
+      <div class="card">
+        <h2>Inspect a point</h2>
+        <div class="inspect" id="inspect"><div class="muted">Click a point on the picture.</div></div>
+        <div class="actions"><button class="btn danger" id="removeBtn" disabled>Remove this row…</button><button class="btn sec sm" id="tableBtn">Show the numbers</button><button class="btn sec sm" id="hintBtn">A hint</button></div>
+        <div class="hintbox" id="hint" hidden></div>
+        <div id="table" hidden style="max-height:260px;overflow:auto;margin-top:12px"></div>
+        <div class="removed" id="removed"></div>
+      </div>
+      <div class="card">
+        <div class="ask"><div class="free">No right or wrong answer</div><div class="q">Before any fitting: would a straight line describe this picture? What shape do you expect, and why?</div><textarea data-q="shape" placeholder="Your intuition, in your own words."></textarea></div>
+        <div class="actions"><button class="btn go" id="keepBtn">Keep my choice →</button></div>
+      </div>
+    </div>
+  </div>
+  <div class="card" id="card1b" hidden>
+    <h2>Step 1b · What your cleaning did to the line</h2>
+    <p class="note">The line is fitted twice on the same sealed rows: with every row you removed put back, and with your cleaning. Press the button.</p>
+    <div class="actions"><button class="btn" id="effectBtn">Show what my cleaning did</button></div>
+    <div class="two" id="p1b" hidden><div class="plot short" id="p1b_with"></div><div class="plot short" id="p1b_without"></div></div>
+    <div class="tiles" id="t1b"></div>
+    <div class="ask" id="ask1b" hidden><div class="free">No right or wrong answer</div><div class="q">Keep your cleaning, or change it? Why?</div><textarea data-q="outlier" placeholder="Your call. What matters is the reason."></textarea></div>
+    <div class="actions"><button class="btn sec" id="back1">← Change my cleaning</button><button class="btn go" id="to2" disabled>On to the split →</button></div>
+  </div>
+</section>
+
+<!-- ================================================================ 2 split and standardise -->
+<section class="station" id="st2">
+  <div class="kicker">Step 2</div><h1 class="t">Split, then standardise</h1>
+  <p class="lead">Every fourth kept row is <b>sealed</b> as the test set: no model sees it until the exam. Then the bank teller: x′ = (x − mean) / std, with the mean and std of the <b>training</b> rows only.</p>
+  <div class="actions"><button class="btn" id="splitBtn">Split and standardise</button></div>
+  <div class="two" id="p2" hidden><div class="card"><h2>Training rows and sealed rows</h2><div class="plot short" id="p2a"></div></div><div class="card"><h2>One currency</h2><div class="plot short" id="p2b"></div></div></div>
+  <div class="tiles" id="t2"></div>
+  <div class="card" id="card2b" hidden>
+    <h2>Step 2b · Why standardising is a must</h2>
+    <p class="note">The same network, the same gradient descent, the same 300 epochs, twice: on the raw numbers and on the standardised ones.</p>
+    <div class="actions"><button class="btn" id="stdBtn">Train twice: raw against standardised</button></div>
+    <div class="two" id="p2c" hidden><div class="plot short" id="p2c_raw"></div><div class="plot short" id="p2c_std"></div></div>
+    <div class="tiles" id="t2b"></div>
+    <p class="note" id="n2b"></p>
+    <div class="actions"><button class="btn go" id="to3" disabled>On to the line →</button></div>
+  </div>
+</section>
+
+<!-- ================================================================ 3 the line -->
+<section class="station" id="st3">
+  <div class="kicker">Step 3</div><h1 class="t">The line: one knob</h1>
+  <p class="lead">On standardised data the best line passes through the middle, so only the slope m is free. Move the slider: every attempt lands in the bowl. Then let calculus find the bottom.</p>
+  <div class="grid">
+    <div class="card"><h2>Your attempt</h2><div class="plot" id="p3a"></div></div>
+    <div class="card"><h2>The bowl: loss against the slope</h2><div class="plot" id="p3b"></div></div>
+  </div>
+  <div class="card">
+    <div class="knob"><div class="top"><label>slope m (standardised)</label><output id="mv">0.50</output></div><input type="range" id="m" min="-2" max="2" step="0.05" value="0.5"><div class="hint">move it at least three times</div></div>
+    <div class="tiles" id="t3"></div>
+    <div class="actions"><button class="btn" id="fitBtn">Let calculus find the bottom</button><button class="btn go" id="to4" disabled>On to the network →</button></div>
+    <div class="eq" id="eq3" hidden></div>
+  </div>
+</section>
+
+<!-- ================================================================ 4 the network board -->
+<section class="station" id="st4">
+  <div class="kicker">Step 4</div><h1 class="t">The network board: play</h1>
+  <p class="lead">Five knobs. Train as many times as you like. Every run lands on the board with its training score and its <b>test</b> score. Two challenges: try to make it <b>memorise</b> (training far above test; not every dataset lets you), and find the <b>smallest</b> network that keeps your best test score. Then pick one, and say why.</p>
+  <div class="grid">
+    <div class="card"><h2>The network, learning</h2><div class="plot tall" id="p4"></div><div class="progress"><i id="prog"></i></div><div class="note" id="n4">Set the knobs and press Train.</div></div>
+    <div class="card">
+      <h2>Your network</h2>
+      <div class="knob"><div class="top"><label>layers</label><output id="layersv">1</output></div><input type="range" id="layers" min="1" max="3" step="1" value="1"><div class="hint">how deep</div></div>
+      <div class="knob"><div class="top"><label>neurons per layer</label><output id="neuronsv">4</output></div><input type="range" id="neurons" min="0" max="6" step="1" value="2"><div class="hint">how wide: 1, 2, 4, 8, 16, 32, 64</div></div>
+      <div class="knob"><div class="top"><label>epochs</label><output id="epochsv">300</output></div><input type="range" id="epochs" min="0" max="5" step="1" value="2"><div class="hint">how long it trains: 50 to 10000</div></div>
+      <div class="knob"><div class="top"><label>learning rate</label><output id="lrv">0.01</output></div><input type="range" id="lr" min="0" max="4" step="1" value="2"><div class="hint">the size of each step downhill</div></div>
+      <div class="knob"><div class="top"><label>batch size</label><output id="batchv">16</output></div><input type="range" id="batch" min="0" max="3" step="1" value="2"><div class="hint">rows per step</div></div>
+      <button class="btn" id="trainBtn" style="width:100%;margin-top:18px">▶ Train</button>
+      <div class="tiles"><div class="tile blue"><div class="k">training R²</div><div class="v" id="trv">–</div></div><div class="tile amber"><div class="k">test R²</div><div class="v" id="tev">–</div></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>The board <span class="small" id="count"></span></h2>
+    <table><thead><tr><th>run</th><th>layers</th><th>neurons</th><th>epochs</th><th>learning rate</th><th>batch</th><th>weights</th><th>training R²</th><th>test R²</th><th></th></tr></thead><tbody id="rows"></tbody></table>
+    <div class="chips" id="badges"></div>
+    <p class="note">Click a row to make it <b>your pick</b>. The pick goes forward to the comparison.</p>
+    <div class="ask"><div class="free">No right or wrong answer</div><div class="q">Why this run and not another?</div><textarea data-q="pick" placeholder="For example: the highest test score; or the same score with far fewer weights."></textarea></div>
+    <div class="actions"><button class="btn go" id="to5" disabled>On to the comparison →</button></div>
+  </div>
+</section>
+
+<!-- ================================================================ 5 three candidates -->
+<section class="station" id="st5">
+  <div class="kicker">Step 5</div><h1 class="t">Three candidates on the sealed rows</h1>
+  <p class="lead">The line, your pick from the board, and, where one exists, the physical law with one or two numbers fitted by least squares. All judged on the same sealed rows. First, your guess.</p>
+  <div class="card">
+    <div class="ask"><div class="free">No right or wrong answer</div><div class="q">Before pressing: which will score best on the sealed rows, the line, the network, or a physical law? Why?</div><textarea data-q="guess" placeholder="Your guess, and the reason."></textarea></div>
+    <div class="actions"><button class="btn" id="cmpBtn">Compare the three</button></div>
+  </div>
+  <div class="card" id="card5" hidden>
+    <h2>Judged on the sealed rows</h2>
+    <div class="plot tall" id="p5"></div>
+    <table id="cmpTable"></table>
+    <div class="verdict" id="verdict"></div>
+    <div class="ask"><div class="free">No right or wrong answer</div><div class="q">Two models score the same. One needs 2 numbers, the other 97. Which would you hand to the plant engineer, and why?</div><textarea data-q="hand" placeholder="Your answer, and the reason."></textarea></div>
+    <div class="actions"><button class="btn go" id="to6">On to the report →</button></div>
+  </div>
+</section>
+
+<!-- ================================================================ 6 report -->
+<section class="station" id="st6">
+  <div class="kicker">Step 6</div><h1 class="t">Your report</h1>
+  <p class="lead">Your Word report comes out with every number, figure and answer of your run. Under every step you then write two short boxes in Word: <b>why this step</b>, and <b>what if we had skipped it</b>. Five slides and a results file come with it.</p>
+  <div class="card">
+    <h2>Group members</h2>
+    <input type="text" id="members" placeholder="names, separated by commas">
+    <div class="actions"><button class="btn go" id="reportBtn">Make my report</button></div>
+    <div class="note" id="n6"></div>
+    <div class="dl" id="dl"></div>
+  </div>
+  <div class="card"><h2>Before you present</h2><p class="note">Three things to remember: what your cleaning did to the line, which score decided your pick, and what your model has never seen.</p></div>
+</section>
+</main>
+</div>
+<div class="modal" id="modal" hidden><div class="box"><h3 id="mTitle">Remove this row?</h3><p id="mText"></p><input type="text" id="mWhy" placeholder="Why? (one line; it goes into your report)"><div class="actions"><button class="btn danger" id="mYes">Yes, remove it</button><button class="btn sec" id="mNo">No, keep it</button></div></div></div>
+<script src="vendor/plotly.min.js"></script>
+<script src="vendor/docx.umd.js"></script>
+<script src="vendor/pptxgen.bundle.js"></script>
+<script src="data.js"></script>
+<script src="core.js"></script>
+<script src="report.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
