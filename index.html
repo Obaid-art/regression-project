@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Regression Workshop · Khalifa University</title>
-<link rel="stylesheet" href="style.css?v=20261104c">
+<link rel="stylesheet" href="style.css?v=20261104d">
 </head>
 <body>
 <header>
@@ -61,7 +61,7 @@
   </div>
   <div class="card" id="card1b" hidden>
     <h2>Step 1b · What your cleaning did to the line</h2>
-    <p class="note">The line is fitted twice on the same sealed rows: with every row you removed put back, and with your cleaning. Press the button.</p>
+    <p class="note">The line is fitted twice on the same test rows: with every row you removed put back, and with your cleaning. Press the button.</p>
     <div class="actions"><button class="btn" id="effectBtn">Show what my cleaning did</button></div>
     <div class="two" id="p1b" hidden><div class="plot short" id="p1b_with"></div><div class="plot short" id="p1b_without"></div></div>
     <div class="tiles" id="t1b"></div>
@@ -73,9 +73,9 @@
 <!-- ================================================================ 2 split and standardise -->
 <section class="station" id="st2">
   <div class="kicker">Step 2</div><h1 class="t">Split, then standardise</h1>
-  <p class="lead">Every fourth kept row is <b>sealed</b>: no model sees it until the exam. Then one currency: x′ = (x − mean) / std, with the mean and std of the <b>training</b> rows only.</p>
+  <p class="lead">Every fourth kept row becomes <b>test data</b>: no model sees it until testing. Then standardise: x′ = (x − mean) / std, with the mean and std of the <b>training</b> rows only.</p>
   <div class="actions"><button class="btn" id="splitBtn">Split and standardise</button></div>
-  <div class="two" id="p2" hidden><div class="card"><h2>Training rows and sealed rows</h2><div class="plot short" id="p2a"></div></div><div class="card"><h2>One currency</h2><div class="plot short" id="p2b"></div></div></div>
+  <div class="two" id="p2" hidden><div class="card"><h2>Training rows and test rows</h2><div class="plot short" id="p2a"></div></div><div class="card"><h2>Standardised</h2><div class="plot short" id="p2b"></div></div></div>
   <div class="tiles" id="t2"></div>
   <div class="card" id="card2b" hidden>
     <h2>Step 2b · Why standardising is a must</h2>
@@ -133,14 +133,14 @@
 
 <!-- ================================================================ 5 the line against the network -->
 <section class="station" id="st5">
-  <div class="kicker">Step 5</div><h1 class="t">Who wins on the sealed rows?</h1>
-  <p class="lead">The line against the network you picked, on the sealed rows neither has seen. First, your guess.</p>
+  <div class="kicker">Step 5</div><h1 class="t">Who wins on the test rows?</h1>
+  <p class="lead">The line against the network you picked, on the test rows neither has seen. First, your guess.</p>
   <div class="card">
-    <div class="ask"><div class="free">No right or wrong answer</div><div class="q">Which will score better on the sealed rows, the line or the network? Why?</div><textarea data-q="guess" placeholder="Your guess, and the reason."></textarea></div>
+    <div class="ask"><div class="free">No right or wrong answer</div><div class="q">Which will score better on the test rows, the line or the network? Why?</div><textarea data-q="guess" placeholder="Your guess, and the reason."></textarea></div>
     <div class="actions"><button class="btn" id="cmpBtn">Compare them</button></div>
   </div>
   <div class="card" id="card5" hidden>
-    <h2>Judged on the sealed rows</h2>
+    <h2>Judged on the test rows</h2>
     <div class="plot tall" id="p5"></div>
     <table id="cmpTable"></table>
     <div class="verdict" id="verdict"></div>
@@ -175,9 +175,9 @@
 <script src="vendor/plotly.min.js"></script>
 <script src="vendor/docx.umd.js"></script>
 <script src="vendor/pptxgen.bundle.js"></script>
-<script src="data.js?v=20261104c"></script>
-<script src="core.js?v=20261104c"></script>
-<script src="report.js?v=20261104c"></script>
-<script src="app.js?v=20261104c"></script>
+<script src="data.js?v=20261104d"></script>
+<script src="core.js?v=20261104d"></script>
+<script src="report.js?v=20261104d"></script>
+<script src="app.js?v=20261104d"></script>
 </body>
 </html>

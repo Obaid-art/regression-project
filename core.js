@@ -44,7 +44,7 @@ const CORE = (() => {
     return { x, y };
   }
   function planted(meta) { return meta.planted || []; }
-  // ---------- the split: every fourth kept row is sealed
+  // ---------- the split: every fourth kept row is test data
   function split(x, y, keep) {
     const xs = [], ys = [], rows = [];
     for (let i = 0; i < x.length; i++) if (keep[i]) { xs.push(x[i]); ys.push(y[i]); rows.push(i + 1); }
@@ -138,12 +138,12 @@ const CORE = (() => {
     const f = v => { const cols = law.cols(v); return v.map((_, i) => back(cols.reduce((s, c, k) => s + c[i] * coef[k], 0))); };
     return { kind, text: meta.law_text, coef, n: coef.length, f, train: r2(S.ytr, f(S.xtr)), test: r2(S.yte, f(S.xte)) };
   }
-  // ---------- the comparison on the sealed rows
-  function compare(meta, S, line, pick) {   // two candidates on the sealed rows: the line and the network the group picked
+  // ---------- the comparison on the test rows
+  function compare(meta, S, line, pick) {   // two candidates on the test rows: the line and the network the group picked
     const tol = 0.02;
     const rows = [{ name: 'the line', params: 2, train: line.train, test: line.test, f: line.f, color: '#1A1A1A' },
                   { name: `the network (run ${pick.run}: ${pick.layers} × ${pick.neurons}, ${pick.epochs} epochs)`, params: pick.weights, train: pick.train, test: pick.test, f: pick.f, color: '#2E7D5B' }];
-    const verdict = line.test >= pick.test - tol ? `The line wins: 2 numbers, same score as the network's ${pick.weights}.` : `The network wins: ${fmt(pick.test - line.test, 2)} more R² on the sealed rows. The shape is not a line.`;
+    const verdict = line.test >= pick.test - tol ? `The line wins: 2 numbers, same score as the network's ${pick.weights}.` : `The network wins: ${fmt(pick.test - line.test, 2)} more R² on the test rows. The shape is not a line.`;
     return { rows, verdict };
   }
   return { mean, std, median, r2, g3, fmt, score, mulberry32, parse, planted, split, lineOn, lossAt, eqText, Net, trainNet, stdEffect, fitLaw, compare, LAWS };
