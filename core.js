@@ -15,6 +15,7 @@ const CORE = (() => {
     return t.replace('-', '−');
   }
   function fmt(v, d) { return (Math.round(v * 10 ** d) / 10 ** d).toFixed(d).replace('-', '−'); }
+  function score(v) { return v < -1 ? fmt(v, 0) : fmt(v, 3); }   // an R² below −1 is a catastrophe, not a number with three decimals
   // ---------- seeded random
   function mulberry32(seed) { let a = seed >>> 0; return function () { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
   function randn(rng) { let u = 0, v = 0; while (u === 0) u = rng(); while (v === 0) v = rng(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
@@ -149,6 +150,6 @@ const CORE = (() => {
     else verdict = `The network wins on the sealed rows, by ${fmt(pick.test - line.test, 2)} in R² over the line: the shape is not a line, and no law was offered. It earns its ${pick.weights} weights here.`;
     return { rows, verdict };
   }
-  return { mean, std, median, r2, g3, fmt, mulberry32, parse, planted, split, lineOn, lossAt, eqText, Net, trainNet, stdEffect, fitLaw, compare, LAWS };
+  return { mean, std, median, r2, g3, fmt, score, mulberry32, parse, planted, split, lineOn, lossAt, eqText, Net, trainNet, stdEffect, fitLaw, compare, LAWS };
 })();
 if (typeof module !== 'undefined') module.exports = CORE;

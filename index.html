@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Regression Workshop · Khalifa University</title>
-<link rel="stylesheet" href="style.css?v=20261103b">
+<link rel="stylesheet" href="style.css?v=20261104b">
 </head>
 <body>
 <header>
@@ -29,7 +29,7 @@
 <!-- ================================================================ 0 group -->
 <section class="station on" id="st0">
   <div class="kicker">Step 0</div><h1 class="t">Which group are you?</h1>
-  <p class="lead">Every group has its own equipment and its own measurements. New to this? Start with <b>the kettle</b>: a practice run where the page shows you what to do, what not to do, and what a good answer looks like. Then pick your real group. Some questions along the way have <b>no right or wrong answer</b>: answer from your own understanding.</p>
+  <p class="lead">Eleven rigs, one per group of three. New to this? Start with <b>the kettle</b>: a practice run where the page shows you what to do, what not to do, and what a good answer looks like. Then pick your real group. Some questions along the way have <b>no right or wrong answer</b>: answer from your own understanding. The page notes the time you complete each step; your report carries that timeline.</p>
   <div class="rigs" id="rigs"></div>
 </section>
 
@@ -153,8 +153,15 @@
   <div class="kicker">Step 6</div><h1 class="t">Your report</h1>
   <p class="lead">Your Word report comes out with every number, figure and answer of your run already in it. Under every step you then write two short boxes in Word: <b>why this step</b>, and <b>what if we had skipped it</b>. That writing is what is marked. Five slides and a results file come with it.</p>
   <div class="card">
-    <h2>Group members</h2>
-    <input type="text" id="members" placeholder="names, separated by commas">
+    <h2>Group members: name and student ID</h2>
+    <table class="members" id="memberRows"><thead><tr><th>#</th><th>full name</th><th>student ID</th></tr></thead><tbody>
+      <tr><td>1</td><td><input type="text" data-m="name" placeholder="name"></td><td><input type="text" data-m="id" placeholder="student ID"></td></tr>
+      <tr><td>2</td><td><input type="text" data-m="name" placeholder="name"></td><td><input type="text" data-m="id" placeholder="student ID"></td></tr>
+      <tr><td>3</td><td><input type="text" data-m="name" placeholder="name"></td><td><input type="text" data-m="id" placeholder="student ID"></td></tr>
+      <tr><td>4</td><td><input type="text" data-m="name" placeholder="(only if your group has four)"></td><td><input type="text" data-m="id" placeholder=""></td></tr>
+    </tbody></table>
+    <input type="hidden" id="members">
+    <p class="note" id="timeline"></p>
     <div class="actions"><button class="btn go" id="reportBtn">Make my report</button></div>
     <div class="note" id="n6"></div>
     <div class="dl" id="dl"></div>
@@ -167,9 +174,9 @@
 <script src="vendor/plotly.min.js"></script>
 <script src="vendor/docx.umd.js"></script>
 <script src="vendor/pptxgen.bundle.js"></script>
-<script src="data.js?v=20261103b"></script>
-<script src="core.js?v=20261103b"></script>
-<script src="report.js?v=20261103b"></script>
-<script src="app.js?v=20261103b"></script>
+<script src="data.js?v=20261104b"></script>
+<script src="core.js?v=20261104b"></script>
+<script src="report.js?v=20261104b"></script>
+<script src="app.js?v=20261104b"></script>
 </body>
 </html>
