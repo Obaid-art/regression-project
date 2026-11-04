@@ -141,11 +141,16 @@ const CORE = (() => {
   // ---------- the comparison on the test rows
   function compare(meta, S, line, pick) {   // two candidates on the test rows: the line and the network the group picked
     const tol = 0.02;
-    const rows = [{ name: 'the line', params: 2, train: line.train, test: line.test, f: line.f, color: '#1A1A1A' },
-                  { name: `the network (run ${pick.run}: ${pick.layers} × ${pick.neurons}, ${pick.epochs} epochs)`, params: pick.weights, train: pick.train, test: pick.test, f: pick.f, color: '#2E7D5B' }];
-    const verdict = line.test >= pick.test - tol ? `The line wins: 2 numbers, same score as the network's ${pick.weights}.` : `The network wins: ${fmt(pick.test - line.test, 2)} more R² on the test rows. The shape is not a line.`;
-    return { rows, verdict };
+    const rows = [{ name: 'linear regression', params: 2, train: line.train, test: line.test, f: line.f, color: '#1A1A1A' },
+                  { name: `neural network (run ${pick.run}: ${pick.layers} × ${pick.neurons}, ${pick.epochs} epochs)`, params: pick.weights, train: pick.train, test: pick.test, f: pick.f, color: '#2E7D5B' }];
+    const same = line.test >= pick.test - tol;
+    const verdict = same ? `Same test score. Linear regression needed 2 parameters. The neural network needed ${pick.weights}. Linear regression wins.` : `The neural network scored ${fmt(pick.test - line.test, 2)} higher on the test data. The data is not a straight line. The neural network wins.`;
+    return { rows, verdict, same, nline: 2, nnet: pick.weights };
   }
-  return { mean, std, median, r2, g3, fmt, score, mulberry32, parse, planted, split, lineOn, lossAt, eqText, Net, trainNet, stdEffect, fitLaw, compare, LAWS };
+  function handQuestion(cmp) {   // the last question, with the real counts of this run
+    if (!cmp) return 'Linear regression needs 2 parameters. The neural network needs many more. Which one would you hand to the plant engineer, and why?';
+    return (cmp.same ? `Same test score. Linear regression needed 2 parameters: you only chose the slope. The neural network needed ${cmp.nnet}.` : `Linear regression: 2 parameters. The neural network: ${cmp.nnet} parameters, and a higher test score.`) + ' Which one would you hand to the plant engineer, and why?';
+  }
+  return { mean, std, median, r2, g3, fmt, score, handQuestion, mulberry32, parse, planted, split, lineOn, lossAt, eqText, Net, trainNet, stdEffect, fitLaw, compare, LAWS };
 })();
 if (typeof module !== 'undefined') module.exports = CORE;
