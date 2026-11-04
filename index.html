@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Regression Workshop · Khalifa University</title>
-<link rel="stylesheet" href="style.css?v=20261104b">
+<link rel="stylesheet" href="style.css?v=20261104c">
 </head>
 <body>
 <header>
   <div class="course">Machine Learning: Regression</div>
   <h1>Regression Workshop</h1>
   <div class="who">Khalifa University &nbsp;·&nbsp; Department of Chemical Engineering &nbsp;·&nbsp; Prof. Ali Elkamel</div>
-  <p>Your group has a real piece of equipment and thirty-one measurements from it. Clean them, split them, teach a line and then a network, and find out which one you would trust with the plant. Ninety minutes. Nothing to install, nothing to sign in to.</p>
+  <p>One piece of equipment, thirty-one measurements. Clean them, split them, teach a line and then a network, and decide which one you would trust with the plant. Ninety minutes. Nothing to install, nothing to sign in to.</p>
 </header>
 <div class="wrap">
 <nav>
@@ -30,7 +30,7 @@
 <!-- ================================================================ 0 group -->
 <section class="station on" id="st0">
   <div class="kicker">Step 0</div><h1 class="t">Which group are you?</h1>
-  <p class="lead">Eleven rigs, one per group of three. New to this? Start with <b>the kettle</b>: a practice run where the page shows you what to do, what not to do, and what a good answer looks like. Then pick your real group. Some questions along the way have <b>no right or wrong answer</b>: answer from your own understanding. The page notes the time you complete each step; your report carries that timeline.</p>
+  <p class="lead">Eleven rigs, one per group of three. Start with <b>the kettle</b>, the practice run with a coach at every step. Then pick your group. Some questions have <b>no right or wrong answer</b>: answer from your own understanding. The time you complete each step goes into your report.</p>
   <div class="rigs" id="rigs"></div>
 </section>
 
@@ -73,7 +73,7 @@
 <!-- ================================================================ 2 split and standardise -->
 <section class="station" id="st2">
   <div class="kicker">Step 2</div><h1 class="t">Split, then standardise</h1>
-  <p class="lead">Every fourth kept row is <b>sealed</b> as the test set: no model sees it until the exam. Then the bank teller: x′ = (x − mean) / std, with the mean and std of the <b>training</b> rows only.</p>
+  <p class="lead">Every fourth kept row is <b>sealed</b>: no model sees it until the exam. Then one currency: x′ = (x − mean) / std, with the mean and std of the <b>training</b> rows only.</p>
   <div class="actions"><button class="btn" id="splitBtn">Split and standardise</button></div>
   <div class="two" id="p2" hidden><div class="card"><h2>Training rows and sealed rows</h2><div class="plot short" id="p2a"></div></div><div class="card"><h2>One currency</h2><div class="plot short" id="p2b"></div></div></div>
   <div class="tiles" id="t2"></div>
@@ -91,7 +91,7 @@
 <!-- ================================================================ 3 the line -->
 <section class="station" id="st3">
   <div class="kicker">Step 3</div><h1 class="t">The line: one knob</h1>
-  <p class="lead">On standardised data the best line passes through the middle, so only the slope m is free. Move the slider: every attempt lands in the bowl. Then let calculus find the bottom.</p>
+  <p class="lead">On standardised data only the slope m is free. Move the slider: every attempt lands in the bowl. Then let calculus find the bottom.</p>
   <div class="grid">
     <div class="card"><h2>Your attempt</h2><div class="plot" id="p3a"></div></div>
     <div class="card"><h2>The bowl: loss against the slope</h2><div class="plot" id="p3b"></div></div>
@@ -107,7 +107,7 @@
 <!-- ================================================================ 4 the network board -->
 <section class="station" id="st4">
   <div class="kicker">Step 4</div><h1 class="t">The network board: play</h1>
-  <p class="lead">Five knobs, and no limit on how many times you train. Every run lands on the board with its training score and its <b>test</b> score. Two challenges: try to make it <b>memorise</b> (training far above test; not every dataset lets you), and find the <b>smallest</b> network that keeps your best test score. Then pick one, and say why.</p>
+  <p class="lead">Five knobs, train as often as you like. Every run lands on the board with its training and its <b>test</b> score. Two challenges: make it <b>memorise</b> (training far above test), and find the <b>smallest</b> network that keeps your best test score. Then pick one, and say why.</p>
   <div class="grid">
     <div class="card"><h2>The network, learning</h2><div class="plot tall" id="p4"></div><div class="progress"><i id="prog"></i></div><div class="note" id="n4">Set the knobs and press Train.</div></div>
     <div class="card">
@@ -131,12 +131,12 @@
   </div>
 </section>
 
-<!-- ================================================================ 5 three candidates -->
+<!-- ================================================================ 5 the line against the network -->
 <section class="station" id="st5">
   <div class="kicker">Step 5</div><h1 class="t">Who wins on the sealed rows?</h1>
-  <p class="lead">Three candidates: the line, your pick from the board, and, where one exists, the physical law with one or two numbers fitted by least squares. All judged on the same sealed rows, the only rows none of them has seen. First, your guess.</p>
+  <p class="lead">The line against the network you picked, on the sealed rows neither has seen. First, your guess.</p>
   <div class="card">
-    <div class="ask"><div class="free">No right or wrong answer</div><div class="q">Before pressing: which will score best on the sealed rows, the line, the network, or a physical law? Why?</div><textarea data-q="guess" placeholder="Your guess, and the reason."></textarea></div>
+    <div class="ask"><div class="free">No right or wrong answer</div><div class="q">Which will score better on the sealed rows, the line or the network? Why?</div><textarea data-q="guess" placeholder="Your guess, and the reason."></textarea></div>
     <div class="actions"><button class="btn" id="cmpBtn">Compare the three</button></div>
   </div>
   <div class="card" id="card5" hidden>
@@ -144,7 +144,7 @@
     <div class="plot tall" id="p5"></div>
     <table id="cmpTable"></table>
     <div class="verdict" id="verdict"></div>
-    <div class="ask"><div class="free">No right or wrong answer</div><div class="q">Two models score the same. One needs 2 numbers, the other 97. Which would you hand to the plant engineer, and why?</div><textarea data-q="hand" placeholder="Your answer, and the reason."></textarea></div>
+    <div class="ask"><div class="free">No right or wrong answer</div><div class="q">Same score. One needs 2 numbers, the other 97. Which would you hand to the plant engineer, and why?</div><textarea data-q="hand" placeholder="Your answer, and the reason."></textarea></div>
     <div class="actions"><button class="btn go" id="to6">On to the report →</button></div>
   </div>
 </section>
@@ -152,7 +152,7 @@
 <!-- ================================================================ 6 report -->
 <section class="station" id="st6">
   <div class="kicker">Step 6</div><h1 class="t">Your report</h1>
-  <p class="lead">Your Word report comes out with every number, figure and answer of your run already in it. Under every step you then write two short boxes in Word: <b>why this step</b>, and <b>what if we had skipped it</b>. That writing is what is marked. Five slides and a results file come with it.</p>
+  <p class="lead">Your Word report comes out with every number, figure and answer already in it. Under every step you write two boxes: <b>why this step</b>, and <b>what if we had skipped it</b>. That writing is what is marked.</p>
   <div class="card">
     <h2>Group members: name and student ID</h2>
     <table class="members" id="memberRows"><thead><tr><th>#</th><th>full name</th><th>student ID</th></tr></thead><tbody>
@@ -175,9 +175,9 @@
 <script src="vendor/plotly.min.js"></script>
 <script src="vendor/docx.umd.js"></script>
 <script src="vendor/pptxgen.bundle.js"></script>
-<script src="data.js?v=20261104b"></script>
-<script src="core.js?v=20261104b"></script>
-<script src="report.js?v=20261104b"></script>
-<script src="app.js?v=20261104b"></script>
+<script src="data.js?v=20261104c"></script>
+<script src="core.js?v=20261104c"></script>
+<script src="report.js?v=20261104c"></script>
+<script src="app.js?v=20261104c"></script>
 </body>
 </html>

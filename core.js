@@ -139,15 +139,11 @@ const CORE = (() => {
     return { kind, text: meta.law_text, coef, n: coef.length, f, train: r2(S.ytr, f(S.xtr)), test: r2(S.yte, f(S.xte)) };
   }
   // ---------- the comparison on the sealed rows
-  function compare(meta, S, line, pick, law) {
-    const linearLaw = law && law.kind === 'lin', tol = 0.02;
-    const rows = [{ name: 'the line' + (linearLaw ? ` (which is also the physics here: ${law.text})` : ''), params: 2, train: line.train, test: line.test, f: line.f, color: '#1A1A1A' },
-                  { name: `the network (your pick, run ${pick.run}: ${pick.layers} × ${pick.neurons}, ${pick.epochs} epochs)`, params: pick.weights, train: pick.train, test: pick.test, f: pick.f, color: '#2E7D5B' }];
-    if (law && !linearLaw) rows.push({ name: `the physical law (${law.text})`, params: law.n, train: law.train, test: law.test, f: law.f, color: '#7B2FA0' });
-    let verdict;
-    if (law && !linearLaw && law.test >= pick.test - tol && law.test >= line.test - tol) verdict = `The physical law wins on the sealed rows: with ${law.n} number${law.n > 1 ? 's' : ''} it matches or beats the network with ${pick.weights}. Same score, far fewer numbers, and every number has a meaning.`;
-    else if (line.test >= pick.test - tol) verdict = `The line wins on the sealed rows: with 2 numbers it matches the network with ${pick.weights}.` + (linearLaw ? ` The physics (${law.text}) says a line, too.` : '') + ' Same score, far fewer numbers.';
-    else verdict = `The network wins on the sealed rows, by ${fmt(pick.test - line.test, 2)} in R² over the line: the shape is not a line, and no law was offered. It earns its ${pick.weights} weights here.`;
+  function compare(meta, S, line, pick) {   // two candidates on the sealed rows: the line and the network the group picked
+    const tol = 0.02;
+    const rows = [{ name: 'the line', params: 2, train: line.train, test: line.test, f: line.f, color: '#1A1A1A' },
+                  { name: `the network (run ${pick.run}: ${pick.layers} × ${pick.neurons}, ${pick.epochs} epochs)`, params: pick.weights, train: pick.train, test: pick.test, f: pick.f, color: '#2E7D5B' }];
+    const verdict = line.test >= pick.test - tol ? `The line wins: 2 numbers, same score as the network's ${pick.weights}.` : `The network wins: ${fmt(pick.test - line.test, 2)} more R² on the sealed rows. The shape is not a line.`;
     return { rows, verdict };
   }
   return { mean, std, median, r2, g3, fmt, score, mulberry32, parse, planted, split, lineOn, lossAt, eqText, Net, trainNet, stdEffect, fitLaw, compare, LAWS };
