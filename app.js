@@ -106,7 +106,9 @@ $('keepBtn').addEventListener('click', () => { ST.locked = true; ST.keep = keptR
 $('back1').addEventListener('click', () => { ST.locked = false; listRemoved(); $('card1b').hidden = true; $('p1b').hidden = true; $('t1b').innerHTML = ''; $('ask1b').hidden = true; $('to2').disabled = true; });
 function effectView(e, S, yt) {   // y axis from the kept rows; a put-back row that flies off the chart is pinned at the edge and named
   const lo = Math.min(...S.ytr, ...S.yte), hi = Math.max(...S.ytr, ...S.yte), pad = 0.6 * (hi - lo); const r = [lo - pad, hi + pad]; const ann = [];
-  e.xtrAll.forEach((x, i) => { const y = e.ytrAll[i]; if (y > r[1] || y < r[0]) { const up = y > r[1], row = e.back && i >= S.xtr.length ? e.back[i - S.xtr.length] : null, k = ann.length; ann.push({ x, y: up ? r[1] : r[0], text: `${row ? 'row ' + row + ': ' : ''}${C.g3(y)}, off the chart`, showarrow: true, arrowhead: 2, arrowcolor: COL.red, ax: 0, ay: (up ? 1 : -1) * (42 + 34 * (k % 2)), font: { size: 15, color: COL.red } }); } });   // labels alternate height so two never overlap
+  const xs = S.xtr.concat(S.xte), xlo = Math.min(...xs), xhi = Math.max(...xs);
+  e.xtrAll.forEach((x, i) => { const y = e.ytrAll[i]; if (y > r[1] || y < r[0]) { const up = y > r[1], row = e.back && i >= S.xtr.length ? e.back[i - S.xtr.length] : null, k = ann.length; const pos = (x - xlo) / Math.max(xhi - xlo, 1e-9), xanchor = pos > 0.6 ? 'right' : pos < 0.4 ? 'left' : 'center';
+    ann.push({ x, y: up ? r[1] : r[0], text: `${row ? 'row ' + row + ': ' : ''}${C.g3(y)}, off the chart`, showarrow: true, arrowhead: 2, arrowcolor: COL.red, ax: xanchor === 'right' ? 12 : xanchor === 'left' ? -12 : 0, ay: (up ? 1 : -1) * (42 + 34 * (k % 2)), xanchor, font: { size: 15, color: COL.red } }); } });   // labels alternate height and lean away from the edges, so none overlaps or runs off the plot
   return { yaxis: { range: r, title: { text: yt } }, annotations: ann };
 }
 function cleaningEffect() {   // the line twice on the same sealed rows: with the removed rows put back into training, and with the cleaning
