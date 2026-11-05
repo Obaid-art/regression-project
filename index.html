@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Regression Workshop · Khalifa University</title>
-<link rel="stylesheet" href="style.css?v=20261104f">
+<link rel="stylesheet" href="style.css?v=20261105a">
 </head>
 <body>
 <header>
@@ -54,7 +54,6 @@
         <div class="removed" id="removed"></div>
       </div>
       <div class="card">
-        <div class="ask"><div class="free">No right or wrong answer</div><div class="q">Before fitting anything: would a straight line fit this data? What shape do you expect, and why?</div><textarea data-q="shape" placeholder="Your intuition, in your own words."></textarea></div>
         <div class="actions"><button class="btn go" id="keepBtn">Keep my choice →</button></div>
       </div>
     </div>
@@ -65,7 +64,7 @@
     <div class="actions"><button class="btn" id="effectBtn">Show what my cleaning did</button></div>
     <div class="two" id="p1b" hidden><div class="plot short" id="p1b_with"></div><div class="plot short" id="p1b_without"></div></div>
     <div class="tiles" id="t1b"></div>
-    <div class="ask" id="ask1b" hidden><div class="free">No right or wrong answer</div><div class="q">Keep your cleaning, or change it? Why?</div><textarea data-q="outlier" placeholder="Your call. What matters is the reason."></textarea></div>
+    <div class="ask" id="ask1b" hidden><div class="free">Question 1 of 3 · no right or wrong answer</div><div class="q">How would the rows you removed have ruined your line if you had kept them?</div><textarea data-q="outlier" placeholder="Look at the two pictures above. Two or three sentences, in your own words."></textarea></div>
     <div class="actions"><button class="btn sec" id="back1">← Change my cleaning</button><button class="btn go" id="to2" disabled>On to the split →</button></div>
   </div>
 </section>
@@ -84,6 +83,7 @@
     <div class="two" id="p2c" hidden><div class="plot short" id="p2c_raw"></div><div class="plot short" id="p2c_std"></div></div>
     <div class="tiles" id="t2b"></div>
     <p class="note" id="n2b"></p>
+    <div class="ask" id="ask2b" hidden><div class="free">Question 2 of 3 · no right or wrong answer</div><div class="q">Why did standardising matter here?</div><textarea data-q="std" placeholder="Look at the two pictures above. Two or three sentences, in your own words."></textarea></div>
     <div class="actions"><button class="btn go" id="to3" disabled>On to the line →</button></div>
   </div>
 </section>
@@ -126,7 +126,6 @@
     <table><thead><tr><th>run</th><th>layers</th><th>neurons</th><th>epochs</th><th>learning rate</th><th>batch</th><th>parameters</th><th>training R²</th><th>test R²</th><th></th></tr></thead><tbody id="rows"></tbody></table>
     <div class="chips" id="badges"></div>
     <p class="note">Click a row to make it <b>your pick</b>. The pick goes forward to the comparison.</p>
-    <div class="ask"><div class="free">No right or wrong answer</div><div class="q">Why this run and not another?</div><textarea data-q="pick" placeholder="For example: the highest test score; or the same score with far fewer parameters."></textarea></div>
     <div class="actions"><button class="btn go" id="to5" disabled>On to the comparison →</button></div>
   </div>
 </section>
@@ -134,9 +133,8 @@
 <!-- ================================================================ 5 the line against the network -->
 <section class="station" id="st5">
   <div class="kicker">Step 5</div><h1 class="t">Linear regression or the neural network?</h1>
-  <p class="lead">Both are scored on the test data, which neither has seen. First, your guess.</p>
+  <p class="lead">Both are scored on the test data, which neither has seen.</p>
   <div class="card">
-    <div class="ask"><div class="free">No right or wrong answer</div><div class="q">Which will score higher on the test data: linear regression or the neural network? Why?</div><textarea data-q="guess" placeholder="Your guess, and the reason."></textarea></div>
     <div class="actions"><button class="btn" id="cmpBtn">Compare them</button></div>
   </div>
   <div class="card" id="card5" hidden>
@@ -144,7 +142,6 @@
     <div class="two"><div class="plot short" id="p5a"></div><div class="plot short" id="p5b"></div></div>
     <table id="cmpTable"></table>
     <div class="verdict" id="verdict"></div>
-    <div class="ask"><div class="free">No right or wrong answer</div><div class="q" id="qHand">Linear regression needs 2 parameters. The neural network needs many more. Which one would you hand to the plant engineer, and why?</div><textarea data-q="hand" placeholder="Your answer, and the reason."></textarea></div>
     <div class="actions"><button class="btn go" id="to6">On to the report →</button></div>
   </div>
 </section>
@@ -152,7 +149,8 @@
 <!-- ================================================================ 6 report -->
 <section class="station" id="st6">
   <div class="kicker">Step 6</div><h1 class="t">Your report</h1>
-  <p class="lead">Your Word report comes out with every number, figure and answer already in it. Under every step you write two boxes: <b>why this step</b>, and <b>what if we had skipped it</b>. That writing is what is marked.</p>
+  <p class="lead">Answer the last question, type your names and IDs, and press the button. Your Word report comes out complete: every number, figure and answer of your run. Upload it to Blackboard.</p>
+  <div class="card"><div class="ask"><div class="free">Question 3 of 3 · no right or wrong answer</div><div class="q" id="qPlant">Which model would you hand to the plant engineer, linear regression or the neural network? Why, and what is one thing it cannot be trusted for?</div><textarea data-q="plant" placeholder="Three or four sentences, in your own words."></textarea></div></div>
   <div class="card">
     <h2>Group members: name and student ID</h2>
     <table class="members" id="memberRows"><thead><tr><th>#</th><th>full name</th><th>student ID</th></tr></thead><tbody>
@@ -167,7 +165,6 @@
     <div class="note" id="n6"></div>
     <div class="dl" id="dl"></div>
   </div>
-  <div class="card"><h2>Before you present</h2><p class="note">Three things to remember when you present: what your cleaning did to the fitted line, which score decided your pick, and what your model has never seen.</p></div>
 </section>
 </main>
 </div>
@@ -175,9 +172,9 @@
 <script src="vendor/plotly.min.js"></script>
 <script src="vendor/docx.umd.js"></script>
 <script src="vendor/pptxgen.bundle.js"></script>
-<script src="data.js?v=20261104f"></script>
-<script src="core.js?v=20261104f"></script>
-<script src="report.js?v=20261104f"></script>
-<script src="app.js?v=20261104f"></script>
+<script src="data.js?v=20261105a"></script>
+<script src="core.js?v=20261105a"></script>
+<script src="report.js?v=20261105a"></script>
+<script src="app.js?v=20261105a"></script>
 </body>
 </html>

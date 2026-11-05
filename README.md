@@ -6,13 +6,13 @@ Students: `https://obaid-art.github.io/regression-project/`
 
 ## What it does
 - **0** pick the group. Twelve datasets: **the kettle** is the practice run (start here), groups 1 to 11 are the real ones (31 rows each, eleven groups of three).
-- **The practice run has a coach**: a box at every station that says what to do, what not to do, and shows a good answer to every intuition question ("other answers can be right too; what counts is the reason"), with a *Show me* button that scrolls to and flashes the exact thing to press.
+- **The practice run has a coach**: a box at every station that says what to do, what not to do, and shows a good answer to each of the three questions ("other answers can be right too; what counts is the reason"), with a *Show me* button that scrolls to and flashes the exact thing to press.
 - **1 Look and clean.** The measurements exactly as logged, nothing flagged. A row at 1000 times the others squashes the picture until the group finds it. The zero line is bold black and anything below zero sits on a red tint marked "below zero". Click a point to inspect it; *Remove this row…* asks for confirmation and a one-line reason (required; it goes into the report); *put it back* undoes. *Show the numbers* lists the rows; *A hint* gives counts, then where to look, then the rig's physical range, never which rows. An intuition question before any fitting. **1b** fits the line twice on the same test rows, with the removed rows put back and with the cleaning.
 - **2 Split and standardise**, with a strip picture of the standardised values. **2b** the same network, plain gradient descent, 300 epochs, raw against standardised.
 - **3 The line**: slider, bowl, calculus; training and test scores.
 - **4 The network board, built for play**: layers, neurons to 64, epochs to 10000, learning rate, batch size; the network drawn as it learns; the board flags memorising and too-simple runs; two challenges with badges; click a row to make it the pick; "why this run?".
 - **5 Who wins on the test rows**: a guess before, the comparison, a verdict that names the winner, a question after.
-- **6 The report**: a Word file (docx.js), five slides (PptxGenJS) and a results file, all built in the browser from the live figures (Plotly). The report has the five intuition answers, every step with its numbers and figures (seven in all), and two boxes per step for the group to write.
+- **6 The report**: a Word file (docx.js), five slides (PptxGenJS) and a results file, all built in the browser from the live figures (Plotly). The report is complete when it comes out: every step with its numbers and figures, and the three answers the group typed on the page (question 1 after step 1b, question 2 after step 2b, question 3 before the report). Nothing is left to fill in; there is no presentation.
 
 Answers are saved in the browser (localStorage) per group, so a refresh does not lose the typing; the board must be re-run after a refresh.
 
