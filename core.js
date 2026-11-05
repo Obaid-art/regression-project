@@ -148,8 +148,8 @@ const CORE = (() => {
     return { rows, verdict, same, nline: 2, nnet: pick.weights };
   }
   function handQuestion(cmp) {   // the last question, with the real counts of this run
-    if (!cmp) return 'Which model would you hand to the plant engineer, linear regression or the neural network? Why, and what is one thing it cannot be trusted for?';
-    return (cmp.same ? `Same test score. Linear regression needed 2 parameters: you only chose the slope. The neural network needed ${cmp.nnet}.` : `Linear regression: 2 parameters. The neural network: ${cmp.nnet} parameters, and a higher test score.`) + ' Which one would you hand to the plant engineer, and why? What is one thing it cannot be trusted for?';
+    if (!cmp) return 'Which model would you hand to the plant engineer, linear regression or the neural network? Why?';
+    return (cmp.same ? `Same test score. Linear regression needed 2 parameters: you only chose the slope. The neural network needed ${cmp.nnet}.` : `Linear regression: 2 parameters. The neural network: ${cmp.nnet} parameters, and a higher test score.`) + ' Which one would you hand to the plant engineer, and why?';
   }
   return { mean, std, median, r2, g3, fmt, score, handQuestion, mulberry32, parse, planted, split, lineOn, lossAt, eqText, Net, trainNet, stdEffect, fitLaw, compare, LAWS };
 })();
